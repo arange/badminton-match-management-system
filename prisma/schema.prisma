@@ -1,0 +1,140 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --------------------------------------------------
+// ENUMS
+// --------------------------------------------------
+enum TransactionType {
+  DEPOSIT
+  MATCH_FEE
+  OTHER
+}
+
+enum MatchState {
+  PLANNED
+  BOOKED
+  FINISHED
+  CANCELLED
+}
+
+// --------------------------------------------------
+// MODELS
+// --------------------------------------------------
+
+model User {
+  id      String @id @default(uuid()) @db.Uuid
+  name    String
+  email   String @unique
+  // If you store a running balance, you can add a balance field:
+  balance Float  @default(0.0)
+
+  transactions Transaction[] // One-to-many relation to Transaction
+  participants MatchParticipant[] // If you want to see which matches this user participated in
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  type        TransactionType
+  amount      Float
+  description String?
+  createdAt   DateTime        @default(now())
+  // No updatedAt, because transactions often aren't updated once created
+}
+
+model Match {
+  id            String             @id @default(uuid()) @db.Uuid
+  date          DateTime
+  // Relationship fields
+  participants  MatchParticipant[]
+  shuttleUsages ShuttleUsage[]
+
+  // If you want to store court bookings in a separate model:
+  matchCourtBookings MatchCourtBooking[]
+
+  state MatchState @default(PLANNED)
+  cost  Float      @default(0.0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MatchParticipant {
+  id      String @id @default(uuid()) @db.Uuid
+  matchId String @db.Uuid
+  userId  String @db.Uuid
+
+  match Match @relation(fields: [matchId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+}
+
+model ShuttleBrand {
+  id            String         @id @default(uuid()) @db.Uuid
+  name          String         @unique
+  price         Float // Price per shuttle
+  shuttleUsages ShuttleUsage[] // One brand -> many usages
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShuttleUsage {
+  id           String @id @default(uuid()) @db.Uuid
+  matchId      String @db.Uuid
+  brandId      String @db.Uuid
+  quantityUsed Int
+  cost         Float // The cost at the time of using the shuttle, because prices can change
+
+  match Match        @relation(fields: [matchId], references: [id])
+  brand ShuttleBrand @relation(fields: [brandId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Court {
+  id                 String              @id @default(uuid()) @db.Uuid
+  name               String
+  // Price per hour to book this court
+  basePrice          Float
+  membershipFee      Float?
+  // Relationship fields
+  matchCourtBookings MatchCourtBooking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MatchCourtBooking {
+  id          String @id @default(uuid()) @db.Uuid
+  matchId     String @db.Uuid
+  courtId     String @db.Uuid
+  // e.g., how many hours booked, or cost if you want to override
+  duration    Float?
+  // If you want to store actual booking cost used for that match, add a field like:
+  bookingCost Float?
+
+  match Match @relation(fields: [matchId], references: [id])
+  court Court @relation(fields: [courtId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

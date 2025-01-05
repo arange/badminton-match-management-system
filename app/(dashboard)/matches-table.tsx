@@ -15,23 +15,23 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Product } from './product';
-import { SelectProduct } from '@/lib/db';
+import { Match } from './match';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Match as MatchType } from '@prisma/client';
 
-export function ProductsTable({
-  products,
+export function MatchesTable({
+  matches,
   offset,
-  totalProducts
+  totalMatches
 }: {
-  products: SelectProduct[];
+  matches: MatchType[];
   offset: number;
-  totalProducts: number;
+  totalMatches: number;
 }) {
   let router = useRouter();
-  let productsPerPage = 5;
+  let matchesPerPage = 5;
 
   function prevPage() {
     router.back();
@@ -44,33 +44,33 @@ export function ProductsTable({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Products</CardTitle>
+        <CardTitle>Matches</CardTitle>
         <CardDescription>
-          Manage your products and view their sales performance.
+          Manage your matches.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="hidden w-[100px] sm:table-cell">
+              {/* <TableHead className="hidden w-[100px] sm:table-cell">
                 <span className="sr-only">Image</span>
-              </TableHead>
-              <TableHead>Name</TableHead>
+              </TableHead> */}
+              <TableHead>Date</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Price</TableHead>
-              <TableHead className="hidden md:table-cell">
+              <TableHead className="hidden md:table-cell">Cost</TableHead>
+              {/* <TableHead className="hidden md:table-cell">
                 Total Sales
-              </TableHead>
+              </TableHead> */}
               <TableHead className="hidden md:table-cell">Created at</TableHead>
-              <TableHead>
+              {/* <TableHead>
                 <span className="sr-only">Actions</span>
-              </TableHead>
+              </TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
-              <Product key={product.id} product={product} />
+            {matches.map((match) => (
+              <Match key={match.id} match={match} />
             ))}
           </TableBody>
         </Table>
@@ -80,9 +80,10 @@ export function ProductsTable({
           <div className="text-xs text-muted-foreground">
             Showing{' '}
             <strong>
-              {Math.max(0, Math.min(offset - productsPerPage, totalProducts) + 1)}-{offset}
+              {Math.max(0, Math.min(offset - matchesPerPage, totalMatches) + 1)}
+              -{offset}
             </strong>{' '}
-            of <strong>{totalProducts}</strong> products
+            of <strong>{totalMatches}</strong> matches
           </div>
           <div className="flex">
             <Button
@@ -90,7 +91,7 @@ export function ProductsTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset === productsPerPage}
+              disabled={offset === matchesPerPage}
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Prev
@@ -100,7 +101,7 @@ export function ProductsTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset + productsPerPage > totalProducts}
+              disabled={offset + matchesPerPage > totalMatches}
             >
               Next
               <ChevronRight className="ml-2 h-4 w-4" />
