@@ -1,5 +1,5 @@
 import 'server-only';
-import { Match } from '@prisma/client';
+import { Match, MatchState } from '@prisma/client';
 import prisma from './prisma';
 
 export async function getMatches(
@@ -10,30 +10,76 @@ export async function getMatches(
   newOffset: number | null;
   totalMatches: number;
 }> {
-  const matches = await prisma.match.findMany();
-  // Always search the full table, not per page
-  if (search) {
-    return {
-      matches,
-      newOffset: null,
-      totalMatches: 0
-    };
-  }
+  const whereClause =
+    search && search !== 'all' ? { state: search as MatchState } : {};
 
-  if (offset === null) {
-    return { matches: [], newOffset: null, totalMatches: 0 };
-  }
+  const [matches, totalMatches] = await prisma.$transaction([
+    prisma.match.findMany({
+      where: whereClause,
+      skip: offset || 0,
+      take: 5
+    }),
+    prisma.match.count({ where: whereClause })
+  ]);
 
-  let moreMatches = await prisma.match.findMany({ take: 5, skip: offset });
-  let newOffset = moreMatches.length >= 5 ? offset + 5 : null;
+  const newOffset = matches.length === 5 ? (offset || 0) + 5 : null;
 
   return {
-    matches: moreMatches,
+    matches,
     newOffset,
-    totalMatches: matches.length
+    totalMatches
   };
 }
 
 export async function deleteMatchesById(id: string) {
   await prisma.match.delete({ where: { id } });
+}
+
+export async function addMatchByDate(date: string) {
+  const newMatch = await prisma.match.create({
+    data: { date }
+  });
+  return newMatch;
+}
+
+export async function getMatchDetailsById(matchId: string) {
+  const matchDetails = await prisma.match.findUnique({
+    where: {
+      id: matchId
+    },
+    include: {
+      participants: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              balance: true
+            }
+          }
+        }
+      },
+      matchCourtBookings: {
+        include: {
+          court: {
+            select: {
+              name: true,
+              basePrice: true,
+              membershipFee: true
+            }
+          }
+        }
+      },
+      shuttleUsages: {
+        include: {
+          brand: {
+            select: {
+              name: true
+            }
+          }
+        }
+      }
+    }
+  });
+
+  return matchDetails;
 }

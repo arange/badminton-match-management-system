@@ -45,27 +45,19 @@ export function MatchesTable({
     <Card>
       <CardHeader>
         <CardTitle>Matches</CardTitle>
-        <CardDescription>
-          Manage your matches.
-        </CardDescription>
+        <CardDescription>Manage your matches.</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              {/* <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
-              </TableHead> */}
               <TableHead>Date</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="hidden md:table-cell">Cost</TableHead>
-              {/* <TableHead className="hidden md:table-cell">
-                Total Sales
-              </TableHead> */}
               <TableHead className="hidden md:table-cell">Created at</TableHead>
-              {/* <TableHead>
+              <TableHead>
                 <span className="sr-only">Actions</span>
-              </TableHead> */}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -78,12 +70,17 @@ export function MatchesTable({
       <CardFooter>
         <form className="flex items-center w-full justify-between">
           <div className="text-xs text-muted-foreground">
-            Showing{' '}
-            <strong>
-              {Math.max(0, Math.min(offset - matchesPerPage, totalMatches) + 1)}
-              -{offset}
-            </strong>{' '}
-            of <strong>{totalMatches}</strong> matches
+            {totalMatches > 0 ? (
+              <>
+                Showing{' '}
+                <strong>
+                  {offset + 1}-{Math.min(offset + matchesPerPage, totalMatches)}
+                </strong>{' '}
+                of <strong>{totalMatches}</strong> matches
+              </>
+            ) : (
+              <>No matches to display</>
+            )}
           </div>
           <div className="flex">
             <Button

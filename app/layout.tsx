@@ -1,3 +1,4 @@
+import * as Toast from '@radix-ui/react-toast';
 import './globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
@@ -15,7 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen w-full flex-col">{children}</body>
+      <body className="flex min-h-screen w-full flex-col">
+        <Toast.Provider swipeDirection="right" duration={2000}>
+          {children}
+        </Toast.Provider>
+      </body>
       <Analytics />
     </html>
   );
