@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import AddNewCard from './components/add-new-card';
 import { MatchState } from '@prisma/client';
 import { StatusPill } from '@/components/ui/status-pill';
+import { formatDate } from '@/lib/utils';
 
 export default async function MatchDetailsPage(props: {
   params: Promise<{ matchId: string }>;
@@ -11,19 +12,15 @@ export default async function MatchDetailsPage(props: {
   const params = await props.params;
   const matchId = params.matchId;
   const matchDetails = await getMatchDetailsById(matchId);
-  const formatWithYear = 'dddd YYYY MMM DD HH:mm';
-  const formatWithoutYear = 'dddd MMM DD HH:mm';
-  const day = dayjs(matchDetails?.date);
-  const formattedDay = day.format(
-    day.isSame(dayjs(), 'year') ? formatWithoutYear : formatWithYear
-  );
+  const formattedDate = matchDetails?.date && formatDate(matchDetails?.date);
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="flex flex-col gap-2 w-full py-4 text-xl justify-center items-center">
         <p className="font-bold text-3xl">
           {matchDetails?.matchCourtBookings[0]?.court.name || 'Not Booked Yet'}
         </p>
-        <p>{formattedDay.toString()}</p>
+        <p>{formattedDate}</p>
         {matchDetails?.matchCourtBookings[0]?.duration && (
           <p>Duration: {matchDetails?.matchCourtBookings[0]?.duration} h</p>
         )}
