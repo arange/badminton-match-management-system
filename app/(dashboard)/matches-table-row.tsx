@@ -4,7 +4,7 @@ import MatchesTableActionMenu from './matches-table-action-menu';
 import type { MatchWithCourtAndParticipants } from '@/lib/prisma-types';
 import { MatchState } from '@prisma/client';
 
-export function Match({ match }: { match: MatchWithCourtAndParticipants }) {
+export function MatchRow({ match }: { match: MatchWithCourtAndParticipants }) {
   const statusColourMap: { [key in MatchState]: string } = {
     PLANNED: 'bg-blue-300',
     BOOKED: 'bg-orange-300',

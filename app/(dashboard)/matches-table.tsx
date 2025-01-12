@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Match } from './match';
+import { MatchRow } from './matches-table-row';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -63,7 +63,7 @@ export function MatchesTable({
           </TableHeader>
           <TableBody>
             {matches.map((match) => (
-              <Match key={match.id} match={match} />
+              <MatchRow key={match.id} match={match} />
             ))}
           </TableBody>
         </Table>
