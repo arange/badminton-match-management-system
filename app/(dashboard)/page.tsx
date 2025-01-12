@@ -1,6 +1,5 @@
 import { getMatches } from '@/lib/db';
 import MatchesTabs from './matches-tabs';
-import { Suspense } from 'react';
 
 export default async function MatchesPage(props: {
   searchParams: Promise<{ s: string; offset: string }>;
@@ -14,12 +13,10 @@ export default async function MatchesPage(props: {
   );
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <MatchesTabs
-        matches={matches}
-        offset={newOffset || 0}
-        totalMatches={totalMatches}
-      />
-    </Suspense>
+    <MatchesTabs
+      matches={matches}
+      offset={newOffset || 0}
+      totalMatches={totalMatches}
+    />
   );
 }
