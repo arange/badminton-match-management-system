@@ -2,10 +2,7 @@ import { getMatchDetailsById } from '@/lib/db';
 import UserInfoCard from './components/user-info-card';
 import dayjs from 'dayjs';
 import AddNewCard from './components/add-new-card';
-import { cn } from '@/lib/utils';
-import { statusColourMap } from 'constants/color';
 import { MatchState } from '@prisma/client';
-import { Badge } from '@/components/ui/badge';
 import { StatusPill } from '@/components/ui/status-pill';
 
 export default async function MatchDetailsPage(props: {
@@ -33,8 +30,10 @@ export default async function MatchDetailsPage(props: {
         {matchDetails?.matchCourtBookings[0]?.court.name && (
           <p>
             ${matchDetails?.cost || 0} ($
-            {(matchDetails?.cost || 0) /
-              (matchDetails?.participants.length || 1)}{' '}
+            {(
+              (matchDetails?.cost || 0) /
+              (matchDetails?.participants.length || 1)
+            ).toFixed(4)}{' '}
             pp)
           </p>
         )}

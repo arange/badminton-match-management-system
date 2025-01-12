@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import Link from 'next/link';
 import { usePathname, useSearchParams, useParams } from 'next/navigation';
+import { Fragment } from 'react';
 
 export default function DashboardBreadcrumb() {
   const searchParams = useSearchParams();
@@ -37,18 +38,20 @@ export default function DashboardBreadcrumb() {
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
         {breadcrumbs.map((crumb, index) => (
-          <BreadcrumbItem key={index}>
-            {index < breadcrumbs.length - 1 ? (
-              <>
-                <BreadcrumbLink asChild>
-                  <Link href={crumb.href}>{crumb.label}</Link>
-                </BreadcrumbLink>
-                <BreadcrumbSeparator />
-              </>
-            ) : (
-              <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
-            )}
-          </BreadcrumbItem>
+          <Fragment key={index}>
+            <BreadcrumbItem>
+              {index < breadcrumbs.length - 1 ? (
+                <>
+                  <BreadcrumbLink asChild>
+                    <Link href={crumb.href}>{crumb.label}</Link>
+                  </BreadcrumbLink>
+                </>
+              ) : (
+                <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+            {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+          </Fragment>
         ))}
       </BreadcrumbList>
     </Breadcrumb>

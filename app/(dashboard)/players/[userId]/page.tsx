@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -7,14 +6,16 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { StatusPill } from '@/components/ui/status-pill';
-import { getUserById } from '@/lib/db';
 import Link from 'next/link';
+import { getUserByUserId } from '../../actions';
+import TopUpModal from './top-up-modal';
 
 export default async function PlayerPage(props: {
   params: Promise<{ userId: string }>;
 }) {
   const params = await props.params;
-  const user = await getUserById(params.userId);
+  const user = await getUserByUserId(params.userId);
+
   return (
     <Card>
       <CardHeader>
@@ -32,11 +33,9 @@ export default async function PlayerPage(props: {
                 user?.balance || 0 > 0 ? 'text-green-600' : 'text-red-600'
               }
             >
-              ${user?.balance}
+              ${user?.balance.toFixed(4)}
             </span>
-            <Button className="ml-2" variant={'secondary'}>
-              Top up
-            </Button>
+            <TopUpModal userId={params.userId} />
           </p>
           <div>
             <p className="text-lg font-bold">Matches</p>

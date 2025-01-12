@@ -147,3 +147,24 @@ export async function getUserById(userId: string) {
     }
   });
 }
+
+export async function topUpUserBalance(userId: string, amount: number) {
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: userId },
+      data: { balance: { increment: amount } }
+    }),
+    prisma.transaction.create({
+      data: {
+        type: 'DEPOSIT',
+        amount,
+        description: 'Top up balance',
+        user: {
+          connect: {
+            id: userId
+          }
+        }
+      }
+    })
+  ]);
+}

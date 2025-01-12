@@ -42,7 +42,6 @@ export default function MatchesTabs({
     try {
       await addMatch(formData);
       setOpenToast(true);
-      console.log('🚀 ~ handleSubmitAddMatch ~ setOpenToast(true)');
     } catch (error) {
       console.log('🚀 ~ handleSubmitAddMatch ~ error:', (error as any).stack);
       throw error;
