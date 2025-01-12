@@ -53,7 +53,7 @@ export function MatchesTable({
             <TableRow>
               <TableHead>Date</TableHead>
               <TableHead>Court</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead className='hidden md:table-cell'>Status</TableHead>
               <TableHead>Participants</TableHead>
               <TableHead className="hidden md:table-cell">Cost</TableHead>
               <TableHead>
