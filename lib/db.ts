@@ -64,7 +64,7 @@ export async function addMatchByDate(date: string) {
 }
 
 export async function getMatchDetailsById(matchId: string) {
-  const matchDetails = await prisma.match.findUnique({
+  return await prisma.match.findUnique({
     where: {
       id: matchId
     },
@@ -94,13 +94,12 @@ export async function getMatchDetailsById(matchId: string) {
         include: {
           brand: {
             select: {
-              name: true
+              name: true,
+              price: true
             }
           }
         }
       }
     }
   });
-
-  return matchDetails;
 }

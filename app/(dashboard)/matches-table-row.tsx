@@ -2,15 +2,9 @@ import { Badge } from '@/components/ui/badge';
 import { TableCell, TableRow } from '@/components/ui/table';
 import MatchesTableActionMenu from './matches-table-action-menu';
 import type { MatchWithCourtAndParticipants } from '@/lib/prisma-types';
-import { MatchState } from '@prisma/client';
+import { statusColourMap } from 'constants/color';
 
 export function MatchRow({ match }: { match: MatchWithCourtAndParticipants }) {
-  const statusColourMap: { [key in MatchState]: string } = {
-    PLANNED: 'bg-blue-300',
-    BOOKED: 'bg-orange-300',
-    FINISHED: 'bg-green-300',
-    CANCELLED: 'bg-red-300'
-  };
   return (
     <TableRow className={`${statusColourMap[match.state]} md:bg-inherit`}>
       <TableCell className="font-medium">
