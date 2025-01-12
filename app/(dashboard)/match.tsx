@@ -28,7 +28,7 @@ export function Match({ match }: { match: MatchWithCourtAndParticipants }) {
         </Badge>
       </TableCell>
       <TableCell>
-        {match.participants.map((p) => p.user.name).join(', ')}
+        {match.participants.map((p) => p.user.name).join(', ') || 'No Participants Yet'}
       </TableCell>
       <TableCell className="hidden md:table-cell">{`$${match.cost}`}</TableCell>
       <TableCell>

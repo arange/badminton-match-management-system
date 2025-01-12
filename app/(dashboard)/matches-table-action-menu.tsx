@@ -1,5 +1,4 @@
 'use client';
-import { Match as MatchType } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,13 +8,14 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
-import { deleteMatch, getMatchDetails } from './actions';
+import { deleteMatch } from './actions';
 import { useRouter } from 'next/navigation';
+import type { MatchWithCourtAndParticipants } from '@/lib/prisma-types';
 
 export default function MatchesTableActionMenu({
   match
 }: {
-  match: MatchType;
+  match: MatchWithCourtAndParticipants;
 }) {
   const router = useRouter();
 
@@ -34,7 +34,7 @@ export default function MatchesTableActionMenu({
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem>
-          <button onClick={handleOnView}>View</button>
+          <button onClick={handleOnView}>{['FINISHED', 'CANCELLED'].includes(match.state) ? 'View' : 'Edit'}</button>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <button onClick={() => deleteMatch(match.id)}>Delete</button>
