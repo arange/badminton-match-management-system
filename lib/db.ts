@@ -73,6 +73,7 @@ export async function getMatchDetailsById(matchId: string) {
         include: {
           user: {
             select: {
+              id: true,
               name: true,
               balance: true
             }
@@ -98,6 +99,49 @@ export async function getMatchDetailsById(matchId: string) {
               price: true
             }
           }
+        }
+      }
+    }
+  });
+}
+
+export async function getUsers() {
+  return await prisma.user.findMany();
+}
+
+export async function getUserById(userId: string) {
+  return await prisma.user.findUnique({
+    where: {
+      id: userId
+    },
+    include: {
+      participants: {
+        include: {
+          match: {
+            select: {
+              id: true,
+              date: true,
+              state: true,
+              matchCourtBookings: {
+                include: {
+                  court: {
+                    select: {
+                      name: true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      transactions: {
+        select: {
+          id: true,
+          type: true,
+          amount: true,
+          description: true,
+          createdAt: true
         }
       }
     }

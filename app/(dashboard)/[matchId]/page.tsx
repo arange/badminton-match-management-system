@@ -1,10 +1,12 @@
 import { getMatchDetailsById } from '@/lib/db';
 import UserInfoCard from './components/user-info-card';
 import dayjs from 'dayjs';
-import AddParticipantCard from './components/add-participant-card';
+import AddNewCard from './components/add-new-card';
 import { cn } from '@/lib/utils';
 import { statusColourMap } from 'constants/color';
 import { MatchState } from '@prisma/client';
+import { Badge } from '@/components/ui/badge';
+import { StatusPill } from '@/components/ui/status-pill';
 
 export default async function MatchDetailsPage(props: {
   params: Promise<{ matchId: string }>;
@@ -22,29 +24,28 @@ export default async function MatchDetailsPage(props: {
     <div className="flex flex-col gap-4">
       <h1 className="flex flex-col gap-2 w-full py-4 text-xl justify-center items-center">
         <p className="font-bold text-3xl">
-          {matchDetails?.matchCourtBookings[0]?.court.name}s
+          {matchDetails?.matchCourtBookings[0]?.court.name || 'Not Booked Yet'}
         </p>
         <p>{formattedDay.toString()}</p>
-        <p>Duration: {matchDetails?.matchCourtBookings[0]?.duration} h</p>
-        <p>
-          ${matchDetails?.cost || 0} ($
-          {(matchDetails?.cost || 0) /
-            (matchDetails?.participants.length || 1)}{' '}
-          pp)
-        </p>
-        <p
-          className={cn(
-            'mx-auto w-fit text-sm rounded border p-1 border-transparent shadow-sm',
-            statusColourMap[matchDetails?.state || MatchState.PLANNED]
-          )}
-        >
+        {matchDetails?.matchCourtBookings[0]?.duration && (
+          <p>Duration: {matchDetails?.matchCourtBookings[0]?.duration} h</p>
+        )}
+        {matchDetails?.matchCourtBookings[0]?.court.name && (
+          <p>
+            ${matchDetails?.cost || 0} ($
+            {(matchDetails?.cost || 0) /
+              (matchDetails?.participants.length || 1)}{' '}
+            pp)
+          </p>
+        )}
+        <StatusPill variant={matchDetails?.state || MatchState.PLANNED}>
           {matchDetails?.state}
-        </p>
+        </StatusPill>
       </h1>
       <div className="w-full">
         <h2 className="text-xl pb-2">Participants</h2>
         <div className="flex flex-wrap gap-2 justify-between md:justify-start">
-          {matchDetails?.participants ? (
+          {(matchDetails?.participants.length || 0) > 0 ? (
             <>
               {matchDetails?.participants.map((p) => (
                 <UserInfoCard
@@ -57,14 +58,14 @@ export default async function MatchDetailsPage(props: {
               ))}
             </>
           ) : (
-            <AddParticipantCard />
+            <AddNewCard title="Add Participant(s)" />
           )}
         </div>
       </div>
       <div className="w-full">
         <h2 className="text-xl pb-2">Shuttlecock Used</h2>
         <div className="flex flex-wrap gap-2 justify-between md:justify-start">
-          {matchDetails?.shuttleUsages ? (
+          {(matchDetails?.shuttleUsages.length || 0) > 0 ? (
             <>
               {matchDetails?.shuttleUsages.map((s) => (
                 <div key={s.id} className="flex gap-2 items-center">
@@ -78,14 +79,14 @@ export default async function MatchDetailsPage(props: {
               ))}
             </>
           ) : (
-            <AddParticipantCard />
+            <AddNewCard title="Add Shuttlecock Usage" />
           )}
         </div>
       </div>
       <div className="w-full">
         <h2 className="text-xl pb-2">Court</h2>
         <div className="flex flex-wrap gap-2 justify-between md:justify-start">
-          {matchDetails?.matchCourtBookings ? (
+          {(matchDetails?.matchCourtBookings.length || 0) > 0 ? (
             <>
               {matchDetails?.matchCourtBookings.map((c) => (
                 <div key={c.id}>
@@ -99,7 +100,7 @@ export default async function MatchDetailsPage(props: {
               ))}
             </>
           ) : (
-            <AddParticipantCard />
+            <AddNewCard title="Add Court Booking" />
           )}
         </div>
       </div>

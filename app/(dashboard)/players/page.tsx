@@ -5,15 +5,28 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import { getUsers } from '@/lib/db';
+import UserInfoCard from '../[matchId]/components/user-info-card';
+import AddNewCard from '../[matchId]/components/add-new-card';
 
-export default function CustomersPage() {
+export default async function PlayersPage() {
+  const users = await getUsers();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Customers</CardTitle>
-        <CardDescription>View all customers and their orders.</CardDescription>
+        <CardTitle>Players</CardTitle>
+        <CardDescription>
+          View all players and their information.
+        </CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>
+        <div className="flex flex-wrap gap-4">
+          {users.map((user) => (
+            <UserInfoCard key={user.id} user={user} />
+          ))}
+          <AddNewCard title="+" />
+        </div>
+      </CardContent>
     </Card>
   );
 }
