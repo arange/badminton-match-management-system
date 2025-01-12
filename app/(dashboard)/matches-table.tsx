@@ -19,14 +19,14 @@ import { Match } from './match';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Match as MatchType } from '@prisma/client';
+import type { MatchWithCourtAndParticipants } from '@/lib/prisma-types';
 
 export function MatchesTable({
   matches,
   offset,
   totalMatches
 }: {
-  matches: MatchType[];
+  matches: MatchWithCourtAndParticipants[];
   offset: number;
   totalMatches: number;
 }) {
@@ -52,9 +52,10 @@ export function MatchesTable({
           <TableHeader>
             <TableRow>
               <TableHead>Date</TableHead>
+              <TableHead>Court</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Participants</TableHead>
               <TableHead className="hidden md:table-cell">Cost</TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>

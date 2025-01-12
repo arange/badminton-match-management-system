@@ -1,5 +1,4 @@
 'use client';
-import { Match as MatchType } from '@prisma/client';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,13 +18,14 @@ import { TimePicker } from '@mui/x-date-pickers';
 import { Toast } from '@/components/ui/toast';
 import { Viewport } from '@radix-ui/react-toast';
 import { addMatch } from './actions';
+import type { MatchWithCourtAndParticipants } from '@/lib/prisma-types';
 
 export default function MatchesTabs({
   matches,
   offset,
   totalMatches
 }: {
-  matches: MatchType[];
+  matches: MatchWithCourtAndParticipants[];
   offset: number;
   totalMatches: number;
 }) {

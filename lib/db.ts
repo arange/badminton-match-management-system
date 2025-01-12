@@ -1,12 +1,13 @@
 import 'server-only';
-import { Match, MatchState } from '@prisma/client';
+import { MatchState } from '@prisma/client';
 import prisma from './prisma';
+import type { MatchWithCourtAndParticipants } from './prisma-types';
 
 export async function getMatches(
   search: string,
   offset: number
 ): Promise<{
-  matches: Match[];
+  matches: MatchWithCourtAndParticipants[];
   newOffset: number | null;
   totalMatches: number;
 }> {
@@ -17,7 +18,27 @@ export async function getMatches(
     prisma.match.findMany({
       where: whereClause,
       skip: offset || 0,
-      take: 5
+      take: 5,
+      include: {
+        matchCourtBookings: {
+          include: {
+            court: {
+              select: {
+                name: true
+              }
+            }
+          }
+        },
+        participants: {
+          include: {
+            user: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }
+      }
     }),
     prisma.match.count({ where: whereClause })
   ]);

@@ -1,6 +1,10 @@
 'use server';
 
-import { addMatchByDate, deleteMatchesById, getMatchDetailsById } from '@/lib/db';
+import {
+  addMatchByDate,
+  deleteMatchesById,
+  getMatchDetailsById
+} from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
 export async function addMatch(formData: FormData) {
@@ -20,7 +24,6 @@ export async function addMatch(formData: FormData) {
 export async function getMatchDetails(id: string) {
   return await getMatchDetailsById(id);
 }
-
 
 export async function deleteMatch(id: string) {
   try {
