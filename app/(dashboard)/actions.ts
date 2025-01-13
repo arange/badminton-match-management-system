@@ -10,7 +10,8 @@ import {
   getMatchDetailsById,
   getUserById,
   getUsers,
-  topUpUserBalance
+  topUpUserBalance,
+  getAllCourtsDB
 } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
@@ -90,4 +91,8 @@ export async function updateShuttleUsed(
 ) {
   await upsertShuttleUsed(shuttleBrandId, matchId, quantity);
   revalidatePath(`/${matchId}`);
+}
+
+export async function getAllCourts() {
+  return await getAllCourtsDB();
 }

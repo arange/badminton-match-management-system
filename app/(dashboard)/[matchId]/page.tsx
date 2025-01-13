@@ -1,8 +1,13 @@
-import AddNewCard from './components/add-new-card';
+import AddCourtCard from './components/add-new-card';
 import { MatchState } from '@prisma/client';
 import { StatusPill } from '@/components/ui/status-pill';
 import { formatDate } from '@/lib/utils';
-import { getAllShuttles, getAllUsers, getMatchDetails } from '../actions';
+import {
+  getAllCourts,
+  getAllShuttles,
+  getAllUsers,
+  getMatchDetails
+} from '../actions';
 import AddParticipantCard from './components/add-participant-card';
 import AddShuttleCard from './components/add-shuttle-card';
 
@@ -13,6 +18,7 @@ export default async function MatchDetailsPage(props: {
   const matchId = params.matchId;
   const allUsers = await getAllUsers();
   const allShuttles = await getAllShuttles();
+  const allCourts = await getAllCourts();
   const matchDetails = await getMatchDetails(matchId);
   const formattedDate = matchDetails?.date && formatDate(matchDetails?.date);
 
@@ -65,8 +71,9 @@ export default async function MatchDetailsPage(props: {
               shuttleBrand={shuttle}
               matchId={matchId}
               numUsed={
-                matchDetails?.shuttleUsages.find((s) => s.brandId === shuttle.id)
-                  ?.quantityUsed || 0
+                matchDetails?.shuttleUsages.find(
+                  (s) => s.brandId === shuttle.id
+                )?.quantityUsed || 0
               }
             />
           ))}
@@ -74,23 +81,19 @@ export default async function MatchDetailsPage(props: {
       </div>
       <div className="w-full">
         <h2 className="text-xl pb-2">Court</h2>
-        <div className="flex flex-wrap gap-2 justify-between md:justify-start">
-          {(matchDetails?.matchCourtBookings.length || 0) > 0 ? (
-            <>
-              {matchDetails?.matchCourtBookings.map((c) => (
-                <div key={c.id}>
-                  <p>{c.court.name}</p>
-                  <p>Duration: {c.duration} h</p>
-                  <p>
-                    ${c.court.basePrice} x ${c.duration} = $
-                    {(c.bookingCost || 0).toFixed(2)}
-                  </p>
-                </div>
-              ))}
-            </>
-          ) : (
-            <AddNewCard title="Add Court Booking" />
-          )}
+        <div className="flex flex-wrap gap-6 justify-between md:justify-start">
+          {allCourts?.map((court) => (
+            <AddCourtCard
+              key={court.id}
+              court={court}
+              matchId={matchId}
+              duration={
+                matchDetails?.matchCourtBookings.find(
+                  (m) => m.courtId === court.id
+                )?.duration || 0
+              }
+            />
+          ))}
         </div>
       </div>
     </div>

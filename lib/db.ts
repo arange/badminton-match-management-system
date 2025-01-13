@@ -232,3 +232,7 @@ export async function upsertShuttleUsed(
     }
   });
 }
+
+export async function getAllCourtsDB() {
+  return await prisma.court.findMany();
+}

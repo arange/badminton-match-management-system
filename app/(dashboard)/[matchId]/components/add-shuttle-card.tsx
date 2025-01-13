@@ -60,8 +60,9 @@ export default function AddShuttleCard({
       >
         <p>{shuttleBrand.name}</p>
         <p>
-          ${shuttleBrand.price.toFixed(2)}{optNumUsed>0 && ` x ${optNumUsed} = $
-          ${(shuttleBrand.price * optNumUsed).toFixed(2)}`}
+          ${shuttleBrand.price.toFixed(2)}
+          {optNumUsed > 0 &&
+            ` x ${optNumUsed} = $${(shuttleBrand.price * optNumUsed).toFixed(2)}`}
         </p>
       </button>
       <button
