@@ -3,8 +3,10 @@
 import {
   addMatchByDate,
   addParticipant,
+  addShuttleUsed,
   deleteMatchesById,
   deleteParticipant,
+  getAllShuttleCocks,
   getMatchDetailsById,
   getUserById,
   getUsers,
@@ -74,5 +76,37 @@ export async function toggleParticipantToMatch(
     return;
   }
   await addParticipant(userId, matchId);
+  revalidatePath(`/${matchId}`);
+}
+
+export async function getAllShuttles() {
+  return await getAllShuttleCocks();
+}
+
+export async function incrementShuttleUsed(
+  shuttleBrandId: string,
+  matchId: string,
+  quantity: number
+) {
+  // const matchDetails = await getMatchDetailsById(matchId);
+  // const shuttleUsed =
+    // matchDetails?.shuttleUsages.find(
+    //   (usage) => usage.brandId === shuttleBrandId
+    // )?.quantityUsed || 0;
+  await addShuttleUsed(shuttleBrandId, matchId, quantity + 1);
+  revalidatePath(`/${matchId}`);
+}
+
+export async function decrementShuttleUsed(
+  shuttleBrandId: string,
+  matchId: string,
+  quantity: number
+) {
+  // const matchDetails = await getMatchDetailsById(matchId);
+  // const shuttleUsed =
+    // matchDetails?.shuttleUsages.find(
+    //   (usage) => usage.brandId === shuttleBrandId
+    // )?.quantityUsed || 0;
+  await addShuttleUsed(shuttleBrandId, matchId, quantity - 1);
   revalidatePath(`/${matchId}`);
 }

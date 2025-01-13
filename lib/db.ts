@@ -194,3 +194,41 @@ export async function deleteParticipant(userId: string, matchId: string) {
     }
   });
 }
+
+export async function getAllShuttleCocks() {
+  return await prisma.shuttleBrand.findMany();
+}
+
+export async function addShuttleUsed(
+  shuttleBrandId: string,
+  matchId: string,
+  quantity: number,
+  totalCost?: number
+) {
+  const unitPrice = await prisma.shuttleBrand.findUnique({
+    where: {
+      id: shuttleBrandId
+    },
+    select: {
+      price: true
+    }
+  });
+  const cost = totalCost || (unitPrice?.price || 0) * quantity;
+  await prisma.shuttleUsage.upsert({
+    create: {
+      matchId,
+      brandId: shuttleBrandId,
+      quantityUsed: quantity,
+      cost
+    },
+    update: {
+      quantityUsed: quantity
+    },
+    where: {
+      matchId_brandId: {
+        matchId,
+        brandId: shuttleBrandId
+      }
+    }
+  });
+}

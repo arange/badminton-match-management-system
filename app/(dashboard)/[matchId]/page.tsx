@@ -2,11 +2,9 @@ import AddNewCard from './components/add-new-card';
 import { MatchState } from '@prisma/client';
 import { StatusPill } from '@/components/ui/status-pill';
 import { formatDate } from '@/lib/utils';
-import {
-  getAllUsers,
-  getMatchDetails
-} from '../actions';
+import { getAllShuttles, getAllUsers, getMatchDetails } from '../actions';
 import AddParticipantCard from './components/add-participant-card';
+import AddShuttleCard from './components/add-shuttle-card';
 
 export default async function MatchDetailsPage(props: {
   params: Promise<{ matchId: string }>;
@@ -14,6 +12,7 @@ export default async function MatchDetailsPage(props: {
   const params = await props.params;
   const matchId = params.matchId;
   const allUsers = await getAllUsers();
+  const allShuttles = await getAllShuttles();
   const matchDetails = await getMatchDetails(matchId);
   const formattedDate = matchDetails?.date && formatDate(matchDetails?.date);
 
@@ -60,22 +59,17 @@ export default async function MatchDetailsPage(props: {
       <div className="w-full">
         <h2 className="text-xl pb-2">Shuttlecock Used</h2>
         <div className="flex flex-wrap gap-2 justify-between md:justify-start">
-          {(matchDetails?.shuttleUsages.length || 0) > 0 ? (
-            <>
-              {matchDetails?.shuttleUsages.map((s) => (
-                <div key={s.id} className="flex gap-2 items-center">
-                  <p className="border rounded-xl p-1">
-                    {s.brand.name} ${s.brand.price} each
-                  </p>
-                  <p>x{s.quantityUsed}</p>
-                  <p>=</p>
-                  <p>${s.cost.toFixed(2)}</p>
-                </div>
-              ))}
-            </>
-          ) : (
-            <AddNewCard title="Add Shuttlecock Usage" />
-          )}
+          {allShuttles?.map((shuttle) => (
+            <AddShuttleCard
+              key={shuttle.id}
+              shuttleBrand={shuttle}
+              matchId={matchId}
+              numUsed={
+                matchDetails?.shuttleUsages.find((s) => s.brandId === shuttle.id)
+                  ?.quantityUsed || 0
+              }
+            />
+          ))}
         </div>
       </div>
       <div className="w-full">
