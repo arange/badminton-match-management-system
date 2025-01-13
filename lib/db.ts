@@ -199,7 +199,7 @@ export async function getAllShuttleCocks() {
   return await prisma.shuttleBrand.findMany();
 }
 
-export async function addShuttleUsed(
+export async function upsertShuttleUsed(
   shuttleBrandId: string,
   matchId: string,
   quantity: number,

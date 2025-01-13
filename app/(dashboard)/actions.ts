@@ -3,7 +3,7 @@
 import {
   addMatchByDate,
   addParticipant,
-  addShuttleUsed,
+  upsertShuttleUsed,
   deleteMatchesById,
   deleteParticipant,
   getAllShuttleCocks,
@@ -83,30 +83,11 @@ export async function getAllShuttles() {
   return await getAllShuttleCocks();
 }
 
-export async function incrementShuttleUsed(
+export async function updateShuttleUsed(
   shuttleBrandId: string,
   matchId: string,
   quantity: number
 ) {
-  // const matchDetails = await getMatchDetailsById(matchId);
-  // const shuttleUsed =
-    // matchDetails?.shuttleUsages.find(
-    //   (usage) => usage.brandId === shuttleBrandId
-    // )?.quantityUsed || 0;
-  await addShuttleUsed(shuttleBrandId, matchId, quantity + 1);
-  revalidatePath(`/${matchId}`);
-}
-
-export async function decrementShuttleUsed(
-  shuttleBrandId: string,
-  matchId: string,
-  quantity: number
-) {
-  // const matchDetails = await getMatchDetailsById(matchId);
-  // const shuttleUsed =
-    // matchDetails?.shuttleUsages.find(
-    //   (usage) => usage.brandId === shuttleBrandId
-    // )?.quantityUsed || 0;
-  await addShuttleUsed(shuttleBrandId, matchId, quantity - 1);
+  await upsertShuttleUsed(shuttleBrandId, matchId, quantity);
   revalidatePath(`/${matchId}`);
 }
