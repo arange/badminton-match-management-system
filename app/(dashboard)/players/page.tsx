@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card';
 import { getUsers } from '@/lib/db';
 import UserInfoCard from '../[matchId]/components/user-info-card';
-import AddNewCard from '../[matchId]/components/add-new-card';
+import AddNewCard from '../[matchId]/components/add-court-card';
 
 export default async function PlayersPage() {
   const users = await getUsers();

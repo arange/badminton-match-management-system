@@ -1,4 +1,4 @@
-import AddCourtCard from './components/add-new-card';
+import AddCourtCard from './components/add-court-card';
 import { MatchState } from '@prisma/client';
 import { StatusPill } from '@/components/ui/status-pill';
 import { formatDate } from '@/lib/utils';
