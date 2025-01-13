@@ -2,9 +2,12 @@
 
 import {
   addMatchByDate,
+  addParticipant,
   deleteMatchesById,
+  deleteParticipant,
   getMatchDetailsById,
   getUserById,
+  getUsers,
   topUpUserBalance
 } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
@@ -41,6 +44,10 @@ export async function getUserByUserId(id: string) {
   return await getUserById(id);
 }
 
+export async function getAllUsers() {
+  return await getUsers();
+}
+
 export async function topUpBalance(id: string, amount: number) {
   try {
     await topUpUserBalance(id, amount);
@@ -49,4 +56,23 @@ export async function topUpBalance(id: string, amount: number) {
     console.log('🚀 ~ topUpBalance ~ error:', (error as any).stack);
     throw error;
   }
+}
+
+export async function toggleParticipantToMatch(
+  userId: string,
+  matchId: string
+) {
+  const matchDetails = await getMatchDetailsById(matchId);
+  const isParticipantAlready =
+    matchDetails?.participants.some(
+      (participant) => participant.userId === userId
+    ) || false;
+
+  if (isParticipantAlready) {
+    await deleteParticipant(userId, matchId);
+    revalidatePath(`/${matchId}`);
+    return;
+  }
+  await addParticipant(userId, matchId);
+  revalidatePath(`/${matchId}`);
 }

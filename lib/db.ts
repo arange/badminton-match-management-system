@@ -168,3 +168,29 @@ export async function topUpUserBalance(userId: string, amount: number) {
     })
   ]);
 }
+
+export async function addParticipant(userId: string, matchId: string) {
+  console.log('🚀 ~ addParticipant ~ userId:', userId);
+  console.log('🚀 ~ addParticipant ~ matchId:', matchId);
+  const match = await prisma.match.findUnique({
+    where: { id: matchId }
+  });
+  if (!match) {
+    throw new Error(`Match with id ${matchId} does not exist`);
+  }
+  await prisma.matchParticipant.create({
+    data: {
+      userId,
+      matchId
+    }
+  });
+}
+
+export async function deleteParticipant(userId: string, matchId: string) {
+  await prisma.matchParticipant.deleteMany({
+    where: {
+      userId: userId,
+      matchId: matchId
+    }
+  });
+}

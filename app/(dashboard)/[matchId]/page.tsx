@@ -1,17 +1,20 @@
-import { getMatchDetailsById } from '@/lib/db';
-import UserInfoCard from './components/user-info-card';
-import dayjs from 'dayjs';
 import AddNewCard from './components/add-new-card';
 import { MatchState } from '@prisma/client';
 import { StatusPill } from '@/components/ui/status-pill';
 import { formatDate } from '@/lib/utils';
+import {
+  getAllUsers,
+  getMatchDetails
+} from '../actions';
+import AddParticipantCard from './components/add-participant-card';
 
 export default async function MatchDetailsPage(props: {
   params: Promise<{ matchId: string }>;
 }) {
   const params = await props.params;
   const matchId = params.matchId;
-  const matchDetails = await getMatchDetailsById(matchId);
+  const allUsers = await getAllUsers();
+  const matchDetails = await getMatchDetails(matchId);
   const formattedDate = matchDetails?.date && formatDate(matchDetails?.date);
 
   return (
@@ -30,7 +33,7 @@ export default async function MatchDetailsPage(props: {
             {(
               (matchDetails?.cost || 0) /
               (matchDetails?.participants.length || 1)
-            ).toFixed(4)}{' '}
+            ).toFixed(2)}{' '}
             pp)
           </p>
         )}
@@ -40,22 +43,18 @@ export default async function MatchDetailsPage(props: {
       </h1>
       <div className="w-full">
         <h2 className="text-xl pb-2">Participants</h2>
-        <div className="flex flex-wrap gap-2 justify-between md:justify-start">
-          {(matchDetails?.participants.length || 0) > 0 ? (
-            <>
-              {matchDetails?.participants.map((p) => (
-                <UserInfoCard
-                  key={p.id}
-                  cost={
-                    matchDetails.cost / matchDetails.participants.length || 0
-                  }
-                  user={p.user}
-                />
-              ))}
-            </>
-          ) : (
-            <AddNewCard title="Add Participant(s)" />
-          )}
+        <div className="flex flex-wrap gap-2 justify-start">
+          {allUsers?.map((user) => (
+            <AddParticipantCard
+              user={user}
+              matchId={matchId}
+              key={user.id}
+              isParticipant={
+                matchDetails?.participants.some((p) => p.userId === user.id) ||
+                false
+              }
+            />
+          ))}
         </div>
       </div>
       <div className="w-full">
