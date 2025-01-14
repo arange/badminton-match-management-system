@@ -16,6 +16,7 @@ export async function getMatches(
 
   const [matches, totalMatches] = await prisma.$transaction([
     prisma.match.findMany({
+      orderBy: { date: 'desc' },
       where: whereClause,
       skip: offset || 0,
       take: 5,

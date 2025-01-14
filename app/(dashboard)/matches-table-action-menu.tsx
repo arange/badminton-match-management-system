@@ -34,11 +34,14 @@ export default function MatchesTableActionMenu({
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem>
-          <button onClick={handleOnView}>{['FINISHED', 'CANCELLED'].includes(match.state) ? 'View' : 'Edit'}</button>
+          <button className='w-full text-left' onClick={handleOnView}>{['FINISHED', 'CANCELLED'].includes(match.state) ? 'View' : 'Edit'}</button>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <button onClick={() => deleteMatch(match.id)}>Delete</button>
+          <span>Add to Calendar</span>
         </DropdownMenuItem>
+        {/* <DropdownMenuItem>
+          <button className='w-full text-left' onClick={() => deleteMatch(match.id)}>Delete</button>
+        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

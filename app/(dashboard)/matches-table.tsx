@@ -54,7 +54,7 @@ export function MatchesTable({
               <TableHead>Date</TableHead>
               <TableHead>Court</TableHead>
               <TableHead className='hidden md:table-cell'>Status</TableHead>
-              <TableHead>Participants</TableHead>
+              <TableHead className='hidden md:table-cell'>Participants</TableHead>
               <TableHead className="hidden md:table-cell">Cost</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
