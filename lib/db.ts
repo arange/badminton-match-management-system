@@ -1,5 +1,5 @@
 import 'server-only';
-import { MatchState } from '@prisma/client';
+import { MatchState, TransactionType } from '@prisma/client';
 import prisma from './prisma';
 import type { MatchWithCourtAndParticipants } from './prisma-types';
 
@@ -54,7 +54,12 @@ export async function getMatches(
 }
 
 export async function deleteMatchesById(id: string) {
-  await prisma.match.delete({ where: { id } });
+  await prisma.$transaction([
+    prisma.matchCourtBooking.deleteMany({ where: { matchId: id } }),
+    prisma.matchParticipant.deleteMany({ where: { matchId: id } }),
+    prisma.shuttleUsage.deleteMany({ where: { matchId: id } }),
+    prisma.match.delete({ where: { id } })
+  ]);
 }
 
 export async function addMatchByDate(date: string) {
