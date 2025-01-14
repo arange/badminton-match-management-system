@@ -1,7 +1,7 @@
 'use client';
 import { debounce } from '@mui/material';
 import { Court } from '@prisma/client';
-// import { updateCourtBooking } from 'app/(dashboard)/actions';
+import { updateCourtBooking } from 'app/(dashboard)/actions';
 import { useCallback, useRef, useState } from 'react';
 
 export default function AddCourtCard({
@@ -24,11 +24,11 @@ export default function AddCourtCard({
       async (courtId: string, matchId: string, accumulatedChange: number) => {
         // TODO: ensure the quantity never goes negative
         if (accumulatedChange !== 0) {
-          // await updateCourtBooking(
-          //   courtId,
-          //   matchId,
-          //   duration + accumulatedChange * 0.5
-          // );
+          await updateCourtBooking(
+            matchId,
+            courtId,
+            duration + accumulatedChange
+          );
           changeRef.current = 0; // Reset accumulated change after successful API call
         }
       },

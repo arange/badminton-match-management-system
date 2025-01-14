@@ -236,3 +236,35 @@ export async function upsertShuttleUsed(
 export async function getAllCourtsDB() {
   return await prisma.court.findMany();
 }
+
+export async function upsertCourtBooking(
+  matchId: string,
+  courtId: string,
+  duration: number
+) {
+  const court = await prisma.court.findUnique({
+    where: {
+      id: courtId
+    },
+    select: {
+      basePrice: true
+    }
+  })
+  return await prisma.matchCourtBooking.upsert({
+    create: {
+      matchId,
+      courtId,
+      duration,
+      bookingCost: court?.basePrice || 0
+    },
+    update: {
+      duration
+    },
+    where: {
+      matchId_courtId: {
+        matchId,
+        courtId
+      }
+    }
+  });
+}

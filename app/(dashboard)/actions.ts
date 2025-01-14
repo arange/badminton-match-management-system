@@ -11,7 +11,8 @@ import {
   getUserById,
   getUsers,
   topUpUserBalance,
-  getAllCourtsDB
+  getAllCourtsDB,
+  upsertCourtBooking
 } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
@@ -95,4 +96,8 @@ export async function updateShuttleUsed(
 
 export async function getAllCourts() {
   return await getAllCourtsDB();
+}
+
+export async function updateCourtBooking(matchId: string, courtId: string, duration: number) {
+  return await upsertCourtBooking(matchId, courtId, duration);
 }
