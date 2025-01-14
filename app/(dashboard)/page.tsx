@@ -6,16 +6,16 @@ export default async function MatchesPage(props: {
 }) {
   const searchParams = await props.searchParams;
   const search = searchParams.s ?? '';
-  const offset = searchParams.offset ?? 0;
-  const { matches, newOffset, totalMatches } = await getMatches(
+  const offset = searchParams.offset;
+  const { matches, totalMatches } = await getMatches(
     search,
-    Number(offset)
+    offset ? Number(offset) : null
   );
 
   return (
     <MatchesTabs
       matches={matches}
-      offset={newOffset || 0}
+      offset={Number(offset) || 0}
       totalMatches={totalMatches}
     />
   );

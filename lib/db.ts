@@ -5,10 +5,9 @@ import type { MatchWithCourtAndParticipants } from './prisma-types';
 
 export async function getMatches(
   search: string,
-  offset: number
+  offset: number | null
 ): Promise<{
   matches: MatchWithCourtAndParticipants[];
-  newOffset: number | null;
   totalMatches: number;
 }> {
   const whereClause =
@@ -44,11 +43,8 @@ export async function getMatches(
     prisma.match.count({ where: whereClause })
   ]);
 
-  const newOffset = matches.length === 5 ? (offset || 0) + 5 : null;
-
   return {
     matches,
-    newOffset,
     totalMatches
   };
 }
@@ -176,8 +172,6 @@ export async function topUpUserBalance(userId: string, amount: number) {
 }
 
 export async function addParticipant(userId: string, matchId: string) {
-  console.log('🚀 ~ addParticipant ~ userId:', userId);
-  console.log('🚀 ~ addParticipant ~ matchId:', matchId);
   const match = await prisma.match.findUnique({
     where: { id: matchId }
   });

@@ -34,11 +34,11 @@ export function MatchesTable({
   let matchesPerPage = 5;
 
   function prevPage() {
-    router.back();
+    router.push(`/?offset=${offset - 5}`, { scroll: false });
   }
 
   function nextPage() {
-    router.push(`/?offset=${offset}`, { scroll: false });
+    router.push(`/?offset=${offset + 5}`, { scroll: false });
   }
 
   return (
@@ -53,8 +53,10 @@ export function MatchesTable({
             <TableRow>
               <TableHead>Date</TableHead>
               <TableHead>Court</TableHead>
-              <TableHead className='hidden md:table-cell'>Status</TableHead>
-              <TableHead className='hidden md:table-cell'>Participants</TableHead>
+              <TableHead className="hidden md:table-cell">Status</TableHead>
+              <TableHead className="hidden md:table-cell">
+                Participants
+              </TableHead>
               <TableHead className="hidden md:table-cell">Cost</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
@@ -89,7 +91,7 @@ export function MatchesTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset === matchesPerPage}
+              disabled={offset < matchesPerPage}
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Prev
