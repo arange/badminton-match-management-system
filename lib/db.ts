@@ -279,3 +279,18 @@ export async function upsertCourtBooking(
     })
   ]);
 }
+
+export async function addPlayerDB({
+  name,
+  email
+}: {
+  name: string;
+  email: string;
+}) {
+  return await prisma.user.create({
+    data: {
+      name,
+      email
+    }
+  });
+}

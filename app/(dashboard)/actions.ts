@@ -12,7 +12,8 @@ import {
   getUsers,
   topUpUserBalance,
   getAllCourtsDB,
-  upsertCourtBooking
+  upsertCourtBooking,
+  addPlayerDB
 } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
@@ -98,7 +99,18 @@ export async function getAllCourts() {
   return await getAllCourtsDB();
 }
 
-export async function updateCourtBooking(matchId: string, courtId: string, duration: number) {
+export async function updateCourtBooking(
+  matchId: string,
+  courtId: string,
+  duration: number
+) {
   await upsertCourtBooking(matchId, courtId, duration);
   revalidatePath(`/${matchId}`);
+}
+
+export async function addPlayer(formData: FormData) {
+  const name = String(formData.get('name'));
+  const email = String(formData.get('email'));
+  await addPlayerDB({ name, email });
+  revalidatePath('/players');
 }
