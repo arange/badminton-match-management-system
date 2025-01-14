@@ -6,11 +6,13 @@ import { useState } from 'react';
 export default function AddParticipantCard({
   user,
   isParticipant,
-  matchId
+  matchId,
+  disabled
 }: {
   user: User;
   isParticipant: boolean;
   matchId: string;
+  disabled: boolean;
 }) {
   const [isOptParticipant, setIsOptParticipant] = useState(() => isParticipant);
   async function handleOnClickUser(userId: string) {
@@ -20,6 +22,7 @@ export default function AddParticipantCard({
 
   return (
     <button
+      disabled={disabled}
       className={`flex flex-col justify-start gap-2 p-2 border rounded ${isOptParticipant ? 'bg-green-500 text-white border-green-500' : 'border-black'}`}
       key={user.id}
       onClick={handleOnClickUser.bind(null, user.id)}

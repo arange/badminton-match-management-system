@@ -7,11 +7,13 @@ import { useCallback, useRef, useState } from 'react';
 export default function AddCourtCard({
   court,
   duration,
-  matchId
+  matchId,
+  disabled
 }: {
   court: Court;
   duration: number;
   matchId: string;
+  disabled: boolean;
 }) {
   const [optDuration, setOptDuration] = useState(duration);
   const changeRef = useRef(0); // Tracks the accumulated change
@@ -50,6 +52,7 @@ export default function AddCourtCard({
   return (
     <div className=" relative">
       <button
+        disabled={disabled}
         className={`flex flex-col justify-start gap-2 p-2 border rounded ${optDuration > 0 ? 'bg-green-500 text-white border-green-500' : 'border-black'}`}
         key={court.id}
         onClick={handleOnClickCourt.bind(null, court.id)}
@@ -62,6 +65,7 @@ export default function AddCourtCard({
         </p>
       </button>
       <button
+        disabled={disabled}
         className={`top-0 right-0 -mt-6 -mr-6 absolute  w-10 h-10 rounded-full flex items-center justify-center ${optDuration > 0 ? 'bg-white text-black border border-black' : 'hidden'}`}
         onClick={handleOnClickNum.bind(null, court.id)}
       >

@@ -22,6 +22,12 @@ export default async function MatchDetailsPage(props: {
   const matchDetails = await getMatchDetails(matchId);
   const formattedDate = matchDetails?.date && formatDate(matchDetails?.date);
 
+  const disabled: boolean =
+    matchDetails?.state &&
+    [MatchState.FINISHED.toString(), MatchState.CANCELLED.toString()].includes(
+      matchDetails.state.toString()
+    ) || false;
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="flex flex-col gap-2 w-full py-4 text-xl justify-center items-center">
@@ -51,6 +57,7 @@ export default async function MatchDetailsPage(props: {
         <div className="flex flex-wrap gap-2 justify-start">
           {allUsers?.map((user) => (
             <AddParticipantCard
+              disabled={disabled}
               user={user}
               matchId={matchId}
               key={user.id}
@@ -67,6 +74,7 @@ export default async function MatchDetailsPage(props: {
         <div className="flex flex-wrap gap-2 justify-between md:justify-start">
           {allShuttles?.map((shuttle) => (
             <AddShuttleCard
+              disabled={disabled}
               key={shuttle.id}
               shuttleBrand={shuttle}
               matchId={matchId}
@@ -84,6 +92,7 @@ export default async function MatchDetailsPage(props: {
         <div className="flex flex-wrap gap-6 justify-between md:justify-start">
           {allCourts?.map((court) => (
             <AddCourtCard
+              disabled={disabled}
               key={court.id}
               court={court}
               matchId={matchId}
