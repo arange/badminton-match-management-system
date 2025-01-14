@@ -7,7 +7,6 @@ import {
 } from '@/components/ui/card';
 import { getUsers } from '@/lib/db';
 import UserInfoCard from '../[matchId]/components/user-info-card';
-import AddNewCard from '../[matchId]/components/add-court-card';
 
 export default async function PlayersPage() {
   const users = await getUsers();
@@ -24,7 +23,6 @@ export default async function PlayersPage() {
           {users.map((user) => (
             <UserInfoCard key={user.id} user={user} />
           ))}
-          <AddNewCard title="+" />
         </div>
       </CardContent>
     </Card>
