@@ -10,7 +10,7 @@ import {
 } from '../actions';
 import AddParticipantCard from './components/add-participant-card';
 import AddShuttleCard from './components/add-shuttle-card';
-import { Button } from '@/components/ui/button';
+import FinaliseButton from './components/finalise-button';
 
 export default async function MatchDetailsPage(props: {
   params: Promise<{ matchId: string }>;
@@ -24,10 +24,12 @@ export default async function MatchDetailsPage(props: {
   const formattedDate = matchDetails?.date && formatDate(matchDetails?.date);
 
   const disabled: boolean =
-    matchDetails?.state &&
-    [MatchState.FINISHED.toString(), MatchState.CANCELLED.toString()].includes(
-      matchDetails.state.toString()
-    ) || false;
+    (matchDetails?.state &&
+      [
+        MatchState.FINISHED.toString(),
+        MatchState.CANCELLED.toString()
+      ].includes(matchDetails.state.toString())) ||
+    false;
 
   return (
     <div className="flex flex-col gap-4">
@@ -49,7 +51,9 @@ export default async function MatchDetailsPage(props: {
         <StatusPill variant={matchDetails?.state || MatchState.PLANNED}>
           {matchDetails?.state}
         </StatusPill>
-        {matchDetails?.state === MatchState.BOOKED && <Button>Finalise</Button>}
+        {matchDetails?.state === MatchState.BOOKED && (
+          <FinaliseButton matchId={matchId} />
+        )}
       </h1>
       <div className="w-full">
         <h2 className="text-xl pb-2">Participants</h2>

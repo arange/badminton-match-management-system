@@ -294,3 +294,29 @@ export async function addPlayerDB({
     }
   });
 }
+
+export async function finaliseMatchDB(
+  matchId: string,
+  userIds: string[],
+  cost: number
+) {
+  const averageCost = cost / userIds.length;
+  await prisma.$transaction([
+    prisma.transaction.createMany({
+      data: userIds.map((userId) => ({
+        userId,
+        amount: averageCost,
+        type: TransactionType.MATCH_FEE,
+        description: 'Match participation fee'
+      }))
+    }),
+    prisma.user.updateMany({
+      where: { id: { in: userIds } },
+      data: { balance: { decrement: averageCost } }
+    }),
+    prisma.match.update({
+      where: { id: matchId },
+      data: { state: MatchState.FINISHED, cost }
+    })
+  ]);
+}

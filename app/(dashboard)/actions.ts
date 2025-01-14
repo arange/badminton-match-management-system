@@ -13,8 +13,10 @@ import {
   topUpUserBalance,
   getAllCourtsDB,
   upsertCourtBooking,
-  addPlayerDB
+  addPlayerDB,
+  finaliseMatchDB
 } from '@/lib/db';
+import { MatchState } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 export async function addMatch(formData: FormData) {
@@ -113,4 +115,39 @@ export async function addPlayer(formData: FormData) {
   const email = String(formData.get('email'));
   await addPlayerDB({ name, email });
   revalidatePath('/players');
+}
+
+export async function finaliseMatch(matchId: string) {
+  const match = await getMatchDetailsById(matchId);
+  if (!match) throw new Error('Match not found');
+  if (match.state === MatchState.FINISHED) {
+    throw new Error('Match is already finished');
+  }
+  // 1. Fetch all shuttle usage for the match
+  const shuttleUsages = match.shuttleUsages;
+  // 2. Calculate total shuttle cost
+  const totalShuttleCost = shuttleUsages.reduce(
+    (acc, curr) => acc + curr.cost,
+    0
+  );
+  // 3. Fetch the court booking
+  const courtBooking = match.matchCourtBookings[0];
+  if (!courtBooking) {
+    throw new Error('Court booking not found');
+  }
+  const { bookingCost, duration } = courtBooking;
+  // 4. Calculate total court cost
+  const totalCourtCost = (bookingCost || 0) * (duration || 0);
+  // 5. Calculate total cost
+  const totalCost = totalShuttleCost + totalCourtCost;
+  console.log('🚀 ~ finaliseMatch ~ totalCost:', totalCost);
+  // 6. Fetch all participants
+  const participantIds = match.participants.map(
+    (participant) => participant.userId
+  );
+  console.log('🚀 ~ finaliseMatch ~ participantIds:', participantIds);
+  // 7. Create transactions, deduct the cost from the participants' balance, and update the  match state and cost
+  console.log('🚀 ~ finaliseMatch ~ matchId:', matchId);
+  await finaliseMatchDB(matchId, participantIds, totalCost);
+  revalidatePath(`/${matchId}`);
 }
