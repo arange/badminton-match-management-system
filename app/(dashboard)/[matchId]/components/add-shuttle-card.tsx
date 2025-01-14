@@ -31,7 +31,7 @@ export default function AddShuttleCard({
           await updateShuttleUsed(
             shuttleBrandId,
             matchId,
-            numUsed + accumulatedChange
+            optNumUsed + accumulatedChange
           );
           changeRef.current = 0; // Reset accumulated change after successful API call
         }

@@ -22,12 +22,14 @@ export default function AddCourtCard({
   const debouncedUpdate = useCallback(
     debounce(
       async (courtId: string, matchId: string, accumulatedChange: number) => {
+        console.log('🚀 ~ duration:', duration);
+        console.log('🚀 ~ accumulatedChange:', accumulatedChange);
         // TODO: ensure the quantity never goes negative
         if (accumulatedChange !== 0) {
           await updateCourtBooking(
             matchId,
             courtId,
-            duration + accumulatedChange
+            optDuration + accumulatedChange
           );
           changeRef.current = 0; // Reset accumulated change after successful API call
         }

@@ -10,6 +10,7 @@ import {
 } from '../actions';
 import AddParticipantCard from './components/add-participant-card';
 import AddShuttleCard from './components/add-shuttle-card';
+import { Button } from '@/components/ui/button';
 
 export default async function MatchDetailsPage(props: {
   params: Promise<{ matchId: string }>;
@@ -35,9 +36,6 @@ export default async function MatchDetailsPage(props: {
           {matchDetails?.matchCourtBookings[0]?.court.name || 'Not Booked Yet'}
         </p>
         <p>{formattedDate}</p>
-        {matchDetails?.matchCourtBookings[0]?.duration && (
-          <p>Duration: {matchDetails?.matchCourtBookings[0]?.duration} h</p>
-        )}
         {matchDetails?.matchCourtBookings[0]?.court.name && (
           <p>
             ${matchDetails?.cost || 0} ($
@@ -51,6 +49,7 @@ export default async function MatchDetailsPage(props: {
         <StatusPill variant={matchDetails?.state || MatchState.PLANNED}>
           {matchDetails?.state}
         </StatusPill>
+        {matchDetails?.state === MatchState.BOOKED && <Button>Finalise</Button>}
       </h1>
       <div className="w-full">
         <h2 className="text-xl pb-2">Participants</h2>

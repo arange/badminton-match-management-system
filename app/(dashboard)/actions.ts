@@ -99,5 +99,6 @@ export async function getAllCourts() {
 }
 
 export async function updateCourtBooking(matchId: string, courtId: string, duration: number) {
-  return await upsertCourtBooking(matchId, courtId, duration);
+  await upsertCourtBooking(matchId, courtId, duration);
+  revalidatePath(`/${matchId}`);
 }

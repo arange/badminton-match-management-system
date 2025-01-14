@@ -249,22 +249,32 @@ export async function upsertCourtBooking(
     select: {
       basePrice: true
     }
-  })
-  return await prisma.matchCourtBooking.upsert({
-    create: {
-      matchId,
-      courtId,
-      duration,
-      bookingCost: court?.basePrice || 0
-    },
-    update: {
-      duration
-    },
-    where: {
-      matchId_courtId: {
-        matchId,
-        courtId
-      }
-    }
   });
+  return await prisma.$transaction([
+    prisma.matchCourtBooking.upsert({
+      create: {
+        matchId,
+        courtId,
+        duration,
+        bookingCost: court?.basePrice || 0
+      },
+      update: {
+        duration
+      },
+      where: {
+        matchId_courtId: {
+          matchId,
+          courtId
+        }
+      }
+    }),
+    prisma.match.update({
+      where: {
+        id: matchId
+      },
+      data: {
+        state: duration === 0 ? MatchState.PLANNED : MatchState.BOOKED
+      }
+    })
+  ]);
 }
