@@ -2,6 +2,7 @@ import * as Toast from '@radix-ui/react-toast';
 import './globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
+import DatePickerProvider from '@/components/date-picker-provider';
 
 export const metadata = {
   title: 'Badminton Match Management System',
@@ -17,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex min-h-screen w-full flex-col">
-        <Toast.Provider swipeDirection="right" duration={2000}>
-          {children}
-        </Toast.Provider>
+        <DatePickerProvider>
+          <Toast.Provider swipeDirection="right" duration={2000}>
+            {children}
+          </Toast.Provider>
+        </DatePickerProvider>
       </body>
       <Analytics />
     </html>

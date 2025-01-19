@@ -5,8 +5,6 @@ import { Button } from '@/components/ui/button';
 import { MatchesTable } from './matches-table';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import {
   Sheet,
@@ -59,62 +57,60 @@ export default function MatchesTabs({
   return (
     <>
       <Sheet modal={false}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Tabs onValueChange={handleOnValueChange} defaultValue="all">
-            <div className="flex items-center">
-              <TabsList>
-                {tabs.map(({ value, label, hidden }) => (
-                  <TabsTrigger
-                    key={value}
-                    value={value}
-                    className={hidden ? 'hidden sm:flex' : ''}
-                  >
-                    {label}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-              <div className="ml-auto flex items-center gap-2">
-                <SheetTrigger asChild>
-                  <Button size="sm" className="h-8 gap-1">
-                    <PlusCircle className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                      Add Match
-                    </span>
-                  </Button>
-                </SheetTrigger>
-              </div>
+        <Tabs onValueChange={handleOnValueChange} defaultValue="all">
+          <div className="flex items-center">
+            <TabsList>
+              {tabs.map(({ value, label, hidden }) => (
+                <TabsTrigger
+                  key={value}
+                  value={value}
+                  className={hidden ? 'hidden sm:flex' : ''}
+                >
+                  {label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            <div className="ml-auto flex items-center gap-2">
+              <SheetTrigger asChild>
+                <Button size="sm" className="h-8 gap-1">
+                  <PlusCircle className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Add Match
+                  </span>
+                </Button>
+              </SheetTrigger>
             </div>
-            {tabs.map(({ value }) => (
-              <TabsContent key={value} value={value}>
-                {activeTab === value && (
-                  <MatchesTable
-                    matches={matches}
-                    offset={offset ?? 0}
-                    totalMatches={totalMatches}
-                  />
-                )}
-              </TabsContent>
-            ))}
-          </Tabs>
-          <SheetContent className="h-full" side="top">
-            <SheetTitle className="mb-6">Add Match</SheetTitle>
-            <form action={handleSubmitAddMatch}>
-              <fieldset className="mb-4 w-full flex flex-col justify-start">
-                <label className="mb-2" htmlFor="date">
-                  Date
-                </label>
-                <DatePicker label="Date" name="date" />
-              </fieldset>
-              <fieldset className="mb-4 w-full flex flex-col justify-start">
-                <label className="mb-2" htmlFor="time">
-                  Time
-                </label>
-                <TimePicker label="Time" name="time" />
-              </fieldset>
-              <Button type="submit">Create Match</Button>
-            </form>
-          </SheetContent>
-        </LocalizationProvider>
+          </div>
+          {tabs.map(({ value }) => (
+            <TabsContent key={value} value={value}>
+              {activeTab === value && (
+                <MatchesTable
+                  matches={matches}
+                  offset={offset ?? 0}
+                  totalMatches={totalMatches}
+                />
+              )}
+            </TabsContent>
+          ))}
+        </Tabs>
+        <SheetContent className="h-full" side="top">
+          <SheetTitle className="mb-6">Add Match</SheetTitle>
+          <form action={handleSubmitAddMatch}>
+            <fieldset className="mb-4 w-full flex flex-col justify-start">
+              <label className="mb-2" htmlFor="date">
+                Date
+              </label>
+              <DatePicker label="Date" name="date" />
+            </fieldset>
+            <fieldset className="mb-4 w-full flex flex-col justify-start">
+              <label className="mb-2" htmlFor="time">
+                Time
+              </label>
+              <TimePicker label="Time" name="time" />
+            </fieldset>
+            <Button type="submit">Create Match</Button>
+          </form>
+        </SheetContent>
       </Sheet>
       <Toast
         title="🎉 Match Created"
