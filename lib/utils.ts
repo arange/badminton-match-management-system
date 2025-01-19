@@ -7,8 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: string | Date): string {
-  const formatWithYear = 'ddd YYYY MMM DD HH:mm';
-  const formatWithoutYear = 'ddd MMM DD HH:mm';
+  const formatWithYear = 'ddd YYYY MMM DD hh:mm a';
+  const formatWithoutYear = 'ddd MMM DD hh:mm a';
   const day = dayjs(dateString);
   const formattedDay = day.format(
     day.isSame(dayjs(), 'year') ? formatWithoutYear : formatWithYear

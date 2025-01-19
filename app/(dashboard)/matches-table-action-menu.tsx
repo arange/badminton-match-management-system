@@ -39,9 +39,9 @@ export default function MatchesTableActionMenu({
         <DropdownMenuItem>
           <span>Add to Calendar</span>
         </DropdownMenuItem>
-        {/* <DropdownMenuItem>
+        <DropdownMenuItem>
           <button className='w-full text-left' onClick={() => deleteMatch(match.id)}>Delete</button>
-        </DropdownMenuItem> */}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -18,14 +18,36 @@ import {
 } from '@/lib/db';
 import { MatchState } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+// Extend dayjs with plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export async function addMatch(formData: FormData) {
-  const date = String(formData.get('date'));
-  const time = String(formData.get('time'));
-  const dateTime = new Date(`${date} ${time}`).toISOString();
+  const date = String(formData.get('date')); // e.g., "01/19/2025"
+  const time = String(formData.get('time')); // e.g., "06:30 PM"
+
+  const dateTime = `${date} ${time}`; // Combine date and time
 
   try {
-    await addMatchByDate(dateTime);
+    // Specify the format explicitly: MM/DD/YYYY hh:mm A
+    const localDateTime = dayjs(dateTime, 'MM/DD/YYYY hh:mm A');
+
+    if (!localDateTime.isValid()) {
+      throw new Error(`Invalid date/time: ${dateTime}`);
+    }
+
+    // Convert Melbourne time to UTC
+    const utcDateTime = localDateTime.tz('Australia/Melbourne').utc().format();
+
+    console.log('🚀 ~ addMatch ~ dateTime(local):', dateTime);
+    console.log('🚀 ~ addMatch ~ utcDateTime:', utcDateTime);
+
+    // Pass the UTC date-time to the database
+    await addMatchByDate(utcDateTime);
     revalidatePath('/');
   } catch (error) {
     console.log('🚀 ~ addMatch ~ error:', (error as any).stack);
