@@ -44,7 +44,7 @@ export async function addMatch(formData: FormData) {
 
     // Convert Melbourne time to UTC
     const utcDateTime = localDateTime
-      .tz(dayjs.tz.guess() || DEFAULT_TIME_ZONE, true)
+      .tz(DEFAULT_TIME_ZONE, true)
       .utc()
       .format();
 
