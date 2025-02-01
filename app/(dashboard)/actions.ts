@@ -21,6 +21,7 @@ import { revalidatePath } from 'next/cache';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { DEFAULT_TIME_ZONE } from 'constants/time';
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -41,7 +42,7 @@ export async function addMatch(formData: FormData) {
     }
 
     // Convert Melbourne time to UTC
-    const utcDateTime = localDateTime.tz('Australia/Melbourne', true).utc().format();
+    const utcDateTime = localDateTime.tz(dayjs.tz.guess() || DEFAULT_TIME_ZONE, true).utc().format();
 
     console.debug('🚀 ~ addMatch ~ dateTime(local):', dateTime);
     console.debug('🚀 ~ addMatch ~ utcDateTime:', utcDateTime);
