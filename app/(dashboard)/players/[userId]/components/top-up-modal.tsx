@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { topUpBalance } from '../../actions';
+import { topUpBalance } from '../../../actions';
 import { useState } from 'react';
 export default function TopUpModal({ userId }: { userId: string }) {
   const [openToast, setOpenToast] = useState(false);

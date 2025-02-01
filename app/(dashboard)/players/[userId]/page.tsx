@@ -8,7 +8,7 @@ import {
 import { StatusPill } from '@/components/ui/status-pill';
 import Link from 'next/link';
 import { getUserByUserId } from '../../actions';
-import TopUpModal from './top-up-modal';
+import TopUpModal from './components/top-up-modal';
 import { formatDate } from '@/lib/utils';
 
 export default async function PlayerPage(props: {
