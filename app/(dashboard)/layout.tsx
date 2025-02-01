@@ -75,7 +75,7 @@ function DesktopNav() {
           <Users2 className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Courts">
+        <NavItem href="/courts" label="Courts">
           <MapPinned className="h-5 w-5" />
         </NavItem>
       </nav>

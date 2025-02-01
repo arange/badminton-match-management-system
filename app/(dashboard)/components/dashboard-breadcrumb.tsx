@@ -18,6 +18,7 @@ export default function DashboardBreadcrumb() {
   const pathParams = useParams();
 
   // Derive breadcrumb data
+  // FIXME: make it adaptable to all kinds of routes
   const breadcrumbs = [
     { href: '/', label: 'Dashboard' },
     {
