@@ -7,45 +7,38 @@ import {
 } from '@/components/ui/card';
 import { StatusPill } from '@/components/ui/status-pill';
 import Link from 'next/link';
-import { getUserByUserId } from '../../actions';
+import { getCourtById } from '../../actions';
 import TopUpModal from './components/top-up-modal';
 import { formatDate } from '@/lib/utils';
 
-export default async function PlayerPage(props: {
-  params: Promise<{ userId: string }>;
+export default async function CourtPage(props: {
+  params: Promise<{ courtId: string }>;
 }) {
   const params = await props.params;
-  const user = await getUserByUserId(params.userId);
+  const court = await getCourtById(params.courtId);
 
-  if (!user) {
-    return <p>User with id ${params.userId} does not exist</p>;
+  if (!court) {
+    return <p>Court with id ${params.courtId} does not exist</p>;
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{user.name}</CardTitle>
+        <CardTitle>{court.name}</CardTitle>
         <CardDescription>
-          <span>ID: {user.id}</span>
+          <span>ID: {court.id}</span>
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col flex-wrap gap-4">
           <p>
-            Balance:{' '}
-            <span
-              className={
-                user.balance || 0 > 0 ? 'text-green-600' : 'text-red-600'
-              }
-            >
-              ${user.balance.toFixed(4)}
-            </span>
-            <TopUpModal userId={params.userId} />
+            BasePrice: <span>${court.basePrice.toFixed(2)}</span>
+            {/* <TopUpModal userId={params.userId} /> */}
           </p>
-          <div>
+          {/* <div>
             <p className="text-lg font-bold">Matches</p>
             <div className="flex flex-col flex-wrap gap-2">
-              {user.participants.map((p) => (
+              {court.participants.map((p) => (
                 <Link className="w-fit" key={p.id} href={`/${p.match.id}`}>
                   <div className="flex flex-wrap gap-2 border rounded border-black p-2 w-fit">
                     <p>{formatDate(p.match.date)}</p>
@@ -59,14 +52,14 @@ export default async function PlayerPage(props: {
                   </div>
                 </Link>
               ))}
-              {user.participants.length === 0 &&
+              {court?.participants.length === 0 &&
                 'There are no matches for this player'}
             </div>
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             <p className="text-lg font-bold">Transactions</p>
             <div className="flex flex-col flex-wrap gap-2">
-              {user.transactions
+              {court?.transactions
                 .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
                 .map((t) => (
                   <div key={t.id} className="flex flex-wrap gap-2 w-fit">
@@ -82,10 +75,10 @@ export default async function PlayerPage(props: {
                     </p>
                   </div>
                 ))}
-              {user.transactions.length === 0 &&
+              {court?.transactions.length === 0 &&
                 'There are no transactions for this player'}
             </div>
-          </div>
+          </div> */}
         </div>
       </CardContent>
     </Card>

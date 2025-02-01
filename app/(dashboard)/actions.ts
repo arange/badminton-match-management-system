@@ -14,7 +14,8 @@ import {
   getAllCourtsDB,
   upsertCourtBooking,
   addPlayerDB,
-  finaliseMatchDB
+  finaliseMatchDB,
+  getCourtByIdDB
 } from '@/lib/db';
 import { MatchState } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
@@ -42,7 +43,10 @@ export async function addMatch(formData: FormData) {
     }
 
     // Convert Melbourne time to UTC
-    const utcDateTime = localDateTime.tz(dayjs.tz.guess() || DEFAULT_TIME_ZONE, true).utc().format();
+    const utcDateTime = localDateTime
+      .tz(dayjs.tz.guess() || DEFAULT_TIME_ZONE, true)
+      .utc()
+      .format();
 
     console.debug('🚀 ~ addMatch ~ dateTime(local):', dateTime);
     console.debug('🚀 ~ addMatch ~ utcDateTime:', utcDateTime);
@@ -122,6 +126,10 @@ export async function updateShuttleUsed(
 
 export async function getAllCourts() {
   return await getAllCourtsDB();
+}
+
+export async function getCourtById(id: string) {
+  return await getCourtByIdDB(id);
 }
 
 export async function updateCourtBooking(

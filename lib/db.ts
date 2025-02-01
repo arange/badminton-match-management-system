@@ -237,6 +237,14 @@ export async function getAllCourtsDB() {
   return await prisma.court.findMany();
 }
 
+export async function getCourtByIdDB(id: string) {
+  return await prisma.court.findUnique({
+    where: {
+      id
+    }
+  });
+}
+
 export async function upsertCourtBooking(
   matchId: string,
   courtId: string,

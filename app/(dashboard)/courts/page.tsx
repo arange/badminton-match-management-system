@@ -5,12 +5,12 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { getUsers } from '@/lib/db';
-import UserInfoCard from './components/user-info-card';
+import { getAllCourtsDB } from '@/lib/db';
+import CourtInfoCard from './components/court-info-card';
 import AddPlayerButton from './components/add-player';
 
-export default async function PlayersPage() {
-  const users = await getUsers();
+export default async function CourtsPage() {
+  const courts = await getAllCourtsDB();
   return (
     <Card>
       <CardHeader>
@@ -26,8 +26,8 @@ export default async function PlayersPage() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-4">
-          {users.map((user) => (
-            <UserInfoCard key={user.id} user={user} />
+          {courts.map((court) => (
+            <CourtInfoCard key={court.id} court={court} />
           ))}
         </div>
       </CardContent>
