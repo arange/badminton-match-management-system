@@ -41,10 +41,10 @@ export async function addMatch(formData: FormData) {
     }
 
     // Convert Melbourne time to UTC
-    const utcDateTime = localDateTime.tz('Australia/Melbourne').utc().format();
+    const utcDateTime = localDateTime.tz('Australia/Melbourne', true).utc().format();
 
-    console.log('🚀 ~ addMatch ~ dateTime(local):', dateTime);
-    console.log('🚀 ~ addMatch ~ utcDateTime:', utcDateTime);
+    console.debug('🚀 ~ addMatch ~ dateTime(local):', dateTime);
+    console.debug('🚀 ~ addMatch ~ utcDateTime:', utcDateTime);
 
     // Pass the UTC date-time to the database
     await addMatchByDate(utcDateTime);
